@@ -20,7 +20,6 @@ export class UploadService {
     for (const line of lines) {
       const tipo = line.slice(0, 2);
       const campos = this.parser.parseLine(line);
-
       if (tipo === '00') {
         const registro = new Registro00(campos);
         const erros = registro.validar();

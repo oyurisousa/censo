@@ -10,7 +10,6 @@ export interface ValidationRule {
 export function Obrigatorio(message?: string) {
   return function (target: any, propertyKey: string) {
     const rules: ValidationRule[] = Reflect.getMetadata(VALIDATION_METADATA_KEY, target, propertyKey) || [];
-    
     rules.push({
       validate(value: any) {
         if (!value || value.trim() === '') {

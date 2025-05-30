@@ -145,6 +145,92 @@ export class Registro00 {
   @ValoresPermitidos(['1', '2', '3', '7', '8'], 'Valor inválido para localização diferenciada')
   localizacaoDiferenciada: string;
 
+  // Campo 21: Dependência administrativa
+  @Obrigatorio('Dependência administrativa é obrigatória')
+  @TamanhoFixo(1, 'Dependência administrativa deve ter 1 caractere')
+  @ValoresPermitidos(['1', '2', '3', '4'], 'Valor inválido para dependência administrativa')
+  dependenciaAdministrativa: string;
+
+  // Campo 22: Secretaria de Educação/Ministério da Educação
+  @ObrigatorioCondicional(
+    (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
+    'Campo obrigatório para escolas públicas'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  secretariaEducacao: string;
+
+  // Campo 23: Secretaria de Segurança Pública/Forças Armadas/Militar
+  @ObrigatorioCondicional(
+    (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
+    'Campo obrigatório para escolas públicas'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  secretariaSeguranca: string;
+
+  // Campo 24: Secretaria da Saúde/Ministério da Saúde
+  @ObrigatorioCondicional(
+    (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
+    'Campo obrigatório para escolas públicas'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  secretariaSaude: string;
+
+  // Campo 25: Outro órgão da administração pública
+  @ObrigatorioCondicional(
+    (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
+    'Campo obrigatório para escolas públicas'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  outroOrgaoPublico: string;
+
+  // Campo 26: Empresa/grupos empresariais (privada)
+  @ObrigatorioCondicional(
+    (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
+    'Campo obrigatório para escolas privadas em atividade'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  mantenedoraEmpresa: string;
+
+  // Campo 27: Sindicatos/associações/cooperativas (privada)
+  @ObrigatorioCondicional(
+    (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
+    'Campo obrigatório para escolas privadas em atividade'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  mantenedoraSindicatos: string;
+
+  // Campo 28: ONG (privada)
+  @ObrigatorioCondicional(
+    (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
+    'Campo obrigatório para escolas privadas em atividade'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  mantenedoraOng: string;
+
+  // Campo 29: Instituição sem fins lucrativos (privada)
+  @ObrigatorioCondicional(
+    (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
+    'Campo obrigatório para escolas privadas em atividade'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  mantenedoraSemFinsLucrativos: string;
+
+  // Campo 30: Sistema S (privada)
+  @ObrigatorioCondicional(
+    (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
+    'Campo obrigatório para escolas privadas em atividade'
+  )
+  @TamanhoFixo(1, 'Deve ter 1 caractere')
+  @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
+  mantenedoraSistemaS: string;
 
   constructor(campos: string[]) {
     this.tipoRegistro = campos[0]?.trim() ?? '';
@@ -167,6 +253,16 @@ export class Registro00 {
     this.orgaoRegional = campos[17]?.trim() ?? '';
     this.localizacaoZona = campos[18]?.trim() ?? '';
     this.localizacaoDiferenciada = campos[19]?.trim() ?? '';
+    this.dependenciaAdministrativa = campos[20]?.trim() ?? '';
+    this.secretariaEducacao = campos[21]?.trim() ?? '';
+    this.secretariaSeguranca = campos[22]?.trim() ?? '';
+    this.secretariaSaude = campos[23]?.trim() ?? '';
+    this.outroOrgaoPublico = campos[24]?.trim() ?? '';
+    this.mantenedoraEmpresa = campos[25]?.trim() ?? '';
+    this.mantenedoraSindicatos = campos[26]?.trim() ?? '';
+    this.mantenedoraOng = campos[27]?.trim() ?? '';
+    this.mantenedoraSemFinsLucrativos = campos[28]?.trim() ?? '';
+    this.mantenedoraSistemaS = campos[29]?.trim() ?? '';
   }
 
   validar(): string[] {
