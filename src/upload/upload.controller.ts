@@ -1,5 +1,6 @@
 import {
   Controller,
+  HttpCode,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -13,6 +14,7 @@ export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
   @Post()
+  @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.processFile(file);
