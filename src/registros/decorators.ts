@@ -2,9 +2,16 @@
 import 'reflect-metadata';
 
 export const VALIDATION_METADATA_KEY = 'validation:rules';
+export const NOME_CAMPO_METADATA_KEY = Symbol('NOME_CAMPO');
 
 export interface ValidationRule {
   validate(value: any, obj: any): string | null;
+}
+
+
+
+export function NomeCampo(nome: string) {
+  return Reflect.metadata(NOME_CAMPO_METADATA_KEY, nome);
 }
 
 export function Obrigatorio(message?: string) {
@@ -318,6 +325,21 @@ export function EmailValido(message?: string) {
       }
     });
     
+    Reflect.defineMetadata(VALIDATION_METADATA_KEY, rules, target, propertyKey);
+  };
+}
+
+export function NaoPreencherSe(condition: (obj: any) => boolean, message?: string) {
+  return function (target: any, propertyKey: string) {
+    const rules: ValidationRule[] = Reflect.getMetadata(VALIDATION_METADATA_KEY, target, propertyKey) || [];
+    rules.push({
+      validate(value: any, obj: any) {
+        if (condition(obj) && value && value.trim() !== '') {
+          return message || 'Campo não deve ser preenchido nesta condição';
+        }
+        return null;
+      }
+    });
     Reflect.defineMetadata(VALIDATION_METADATA_KEY, rules, target, propertyKey);
   };
 }

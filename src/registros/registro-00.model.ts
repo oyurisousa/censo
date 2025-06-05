@@ -13,29 +13,35 @@ import {
   MinimoCaracteres,
   VALIDATION_METADATA_KEY,
   TelefoneValido,
-  EmailValido
+  EmailValido,
+  NOME_CAMPO_METADATA_KEY,
+  NomeCampo
 } from './decorators';
 
 export class Registro00 {
   // Campo 1: Tipo de registro
+  @NomeCampo('001 - Tipo de registro')
   @Obrigatorio('Tipo de registro é obrigatório')
   @TamanhoFixo(2, 'Tipo de registro deve ter exatamente 2 caracteres')
   @ValoresPermitidos(['00'], 'O registro declarado não faz parte do escopo do educacenso')
   tipoRegistro: string;
 
   // Campo 2: Código de escola - Inep
+  @NomeCampo('002 - Código de escola')
   @Obrigatorio('Código de escola é obrigatório')
   @TamanhoFixo(8, 'Código de escola deve ter exatamente 8 caracteres')
   @RegexPadrao(/^[0-9]{8}$/, 'Apenas números podem ser informados')
   codigoEscola: string;
 
   // Campo 3: Situação de funcionamento
-  @Obrigatorio('Situação de funcionamento é obrigatória')
+  @NomeCampo('003 - Situação de funcionamento')
+  @Obrigatorio('')
   @TamanhoFixo(1, 'Situação de funcionamento deve ter exatamente 1 caractere')
   @ValoresPermitidos(['1', '2', '3'], 'Valor não permitido para situação de funcionamento')
   situacaoFuncionamento: string;
 
   // Campo 4: Data de início do ano letivo
+  @NomeCampo('004 - Data de início do ano letivo')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Data de início é obrigatória quando escola está em atividade'
@@ -46,6 +52,7 @@ export class Registro00 {
   dataInicio: string;
 
   // Campo 5: Data de término do ano letivo
+  @NomeCampo('005 - Data de término do ano letivo')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Data de término é obrigatória quando escola está em atividade'
@@ -56,6 +63,7 @@ export class Registro00 {
   dataFim: string;
 
   // Campo 6: Nome da escola
+  @NomeCampo('006 - Nome da escola')
   @Obrigatorio('Nome da escola é obrigatório')
   @TamanhoMaximo(100, 'Nome da escola não pode ter mais de 100 caracteres')
   @RegexPadrao(/^[A-Z0-9ªº– ]+$/i, 'Caracteres não permitidos no nome da escola')
@@ -63,6 +71,7 @@ export class Registro00 {
   nomeEscola: string;
 
   // Campo 7: CEP
+  @NomeCampo('007 - CEP')
   @Obrigatorio('CEP é obrigatório')
   @TamanhoFixo(8, 'CEP deve ter exatamente 8 caracteres')
   @RegexPadrao(/^[0-9]{8}$/, 'Apenas números podem ser informados no CEP')
@@ -70,6 +79,7 @@ export class Registro00 {
   cep: string;
 
   // Campo 8: Município
+  @NomeCampo('008 - Município')
   @Obrigatorio('Município é obrigatório')
   @TamanhoFixo(7, 'Código do município deve ter exatamente 7 caracteres')
   @RegexPadrao(/^[0-9]{7}$/, 'Apenas números podem ser informados no código do município')
@@ -77,12 +87,14 @@ export class Registro00 {
   municipio: string;
 
   // Campo 9: Distrito
+  @NomeCampo('009 - Distrito')
   @Obrigatorio('Distrito é obrigatório')
   @TamanhoMaximo(2, 'Código do distrito não pode ter mais de 2 caracteres')
   @DistritoValido('municipio', 'Código do distrito inválido ou não corresponde ao município informado')
   distrito: string;
 
   // Campo 10: Endereço
+  @NomeCampo('010 - Endereço')
   @Obrigatorio('Endereço é obrigatório')
   @TamanhoMaximo(100, 'Endereço não pode ter mais de 100 caracteres')
   @RegexPadrao(/^[A-Z0-9ªº– /., ]+$/i, 'Caracteres não permitidos no endereço')
@@ -90,21 +102,25 @@ export class Registro00 {
 
 
   // Campo 11: Número
+  @NomeCampo('011 - Número')
   @TamanhoMaximo(10, 'Número não pode ter mais de 10 caracteres')
   @RegexPadrao(/^[A-Z0-9ªº– /., ]*$/i, 'Caracteres não permitidos no número')
   numero: string;
 
   // Campo 12: Complemento
+  @NomeCampo('012 - Complemento')
   @TamanhoMaximo(20, 'Complemento não pode ter mais de 20 caracteres')
   @RegexPadrao(/^[A-Z0-9ªº– /., ]*$/i, 'Caracteres não permitidos no complemento')
   complemento: string;
 
   // Campo 13: Bairro
+  @NomeCampo('013 - Bairro')
   @TamanhoMaximo(50, 'Bairro não pode ter mais de 50 caracteres')
   @RegexPadrao(/^[A-Z0-9ªº– /., ]*$/i, 'Caracteres não permitidos no bairro')
   bairro: string;
 
   // Campo 14: DDD
+  @NomeCampo('014 - DDD')
   @ObrigatorioCondicional(
     (e: Registro00) => !!e.telefone || !!e.outroTelefone,
     'DDD é obrigatório quando há telefone cadastrado'
@@ -115,42 +131,50 @@ export class Registro00 {
   ddd: string;
 
   // Campo 15: Telefone
+  @NomeCampo('015 - Telefone')
   @TelefoneValido('ddd', 'Telefone inválido')
   telefone: string;
 
   // Campo 16: Outro telefone
+  @NomeCampo('016 - Outro telefone')
   @TelefoneValido('ddd', 'Outro telefone inválido', 'telefone')
   outroTelefone: string;
 
   // Campo 17: E-mail
+  @NomeCampo('017 - E-mail')
   @TamanhoMaximo(100, 'E-mail não pode ter mais de 100 caracteres')
   @EmailValido('E-mail inválido')
   email: string;
 
   // Campo 18: Órgão regional
+  @NomeCampo('018 - Órgão regional')
   @TamanhoFixo(5, 'Código do órgão deve ter 5 caracteres')
   // @OrgaoRegionalValido('municipio') - Implementar validação contra tabela
   orgaoRegional: string;
 
   // Campo 19: Localização/Zona
+  @NomeCampo('019 - Localização/Zona')
   @Obrigatorio('Localização/Zona é obrigatória')
   @TamanhoFixo(1, 'Localização deve ter 1 caractere')
   @ValoresPermitidos(['1', '2'], 'Zona inválida (1-Urbana, 2-Rural)')
   localizacaoZona: string;
 
   // Campo 20: Localização diferenciada
+  @NomeCampo('020 - Localização diferenciada')
   @Obrigatorio('Localização diferenciada é obrigatória')
   @TamanhoFixo(1, 'Localização diferenciada deve ter 1 caractere')
   @ValoresPermitidos(['1', '2', '3', '7', '8'], 'Valor inválido para localização diferenciada')
   localizacaoDiferenciada: string;
 
   // Campo 21: Dependência administrativa
+  @NomeCampo('021 - Dependência administrativa')
   @Obrigatorio('Dependência administrativa é obrigatória')
   @TamanhoFixo(1, 'Dependência administrativa deve ter 1 caractere')
   @ValoresPermitidos(['1', '2', '3', '4'], 'Valor inválido para dependência administrativa')
   dependenciaAdministrativa: string;
 
   // Campo 22: Secretaria de Educação/Ministério da Educação
+  @NomeCampo('022 - Secretaria de Educação/Ministério da Educação')
   @ObrigatorioCondicional(
     (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
     'Campo obrigatório para escolas públicas'
@@ -160,6 +184,7 @@ export class Registro00 {
   secretariaEducacao: string;
 
   // Campo 23: Secretaria de Segurança Pública/Forças Armadas/Militar
+  @NomeCampo('023 - Secretaria de Segurança Pública/Forças Armadas/Militar')
   @ObrigatorioCondicional(
     (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
     'Campo obrigatório para escolas públicas'
@@ -167,8 +192,9 @@ export class Registro00 {
   @TamanhoFixo(1, 'Deve ter 1 caractere')
   @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
   secretariaSeguranca: string;
-
+  
   // Campo 24: Secretaria da Saúde/Ministério da Saúde
+  @NomeCampo('024 - Secretaria da Saúde/Ministério da Saúde')
   @ObrigatorioCondicional(
     (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
     'Campo obrigatório para escolas públicas'
@@ -178,6 +204,7 @@ export class Registro00 {
   secretariaSaude: string;
 
   // Campo 25: Outro órgão da administração pública
+  @NomeCampo('025 - Outro órgão da administração pública')
   @ObrigatorioCondicional(
     (e: Registro00) => ['1', '2', '3'].includes(e.dependenciaAdministrativa),
     'Campo obrigatório para escolas públicas'
@@ -187,6 +214,7 @@ export class Registro00 {
   outroOrgaoPublico: string;
 
   // Campo 26: Empresa/grupos empresariais (privada)
+  @NomeCampo('026 - Empresa/grupos empresariais (privada)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas em atividade'
@@ -196,6 +224,7 @@ export class Registro00 {
   mantenedoraEmpresa: string;
 
   // Campo 27: Sindicatos/associações/cooperativas (privada)
+  @NomeCampo('027 - Sindicatos/associações/cooperativas (privada)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas em atividade'
@@ -205,6 +234,7 @@ export class Registro00 {
   mantenedoraSindicatos: string;
 
   // Campo 28: ONG (privada)
+  @NomeCampo('028 - ONG (privada)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas em atividade'
@@ -214,6 +244,7 @@ export class Registro00 {
   mantenedoraOng: string;
 
   // Campo 29: Instituição sem fins lucrativos (privada)
+  @NomeCampo('029 - Instituição sem fins lucrativos (privada)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas em atividade'
@@ -223,6 +254,7 @@ export class Registro00 {
   mantenedoraSemFinsLucrativos: string;
 
   // Campo 30: Sistema S (privada)
+  @NomeCampo('030 - Sistema S (privada)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas em atividade'
@@ -232,6 +264,7 @@ export class Registro00 {
   mantenedoraSistemaS: string;
 
   // Campo 31: Organização da Sociedade Civil de Interesse Público (Oscip)
+  @NomeCampo('031 - Organização da Sociedade Civil de Interesse Público (Oscip)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1' && e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas em atividade'
@@ -241,6 +274,7 @@ export class Registro00 {
   oscip: string;
 
   // Campo 32: Categoria da escola privada
+  @NomeCampo('032 - Categoria da escola privada')
   @ObrigatorioCondicional(
     (e: Registro00) => e.dependenciaAdministrativa === '4',
     'Campo obrigatório para escolas privadas'
@@ -250,6 +284,7 @@ export class Registro00 {
   categoriaPrivada: string;
 
   // Campo 33: Secretaria estadual (parceria/convênio)
+  @NomeCampo('033 - Secretaria estadual (parceria/convênio)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Campo obrigatório para escolas em atividade'
@@ -259,6 +294,7 @@ export class Registro00 {
   parceriaSecretariaEstadual: string;
 
   // Campo 34: Secretaria municipal (parceria/convênio)
+  @NomeCampo('034 -   Secretaria municipal (parceria/convênio)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Campo obrigatório para escolas em atividade'
@@ -268,6 +304,7 @@ export class Registro00 {
   parceriaSecretariaMunicipal: string;
 
   // Campo 35: Não possui parceria ou convênio
+  @NomeCampo('035 - Não possui parceria ou convênio')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Campo obrigatório para escolas em atividade'
@@ -277,6 +314,7 @@ export class Registro00 {
   parceriaNaoPossui: string;
 
   // Campo 36: Termo de colaboração
+  @NomeCampo('036 - Termo de colaboração')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaEstadual === '1',
     'Campo obrigatório quando parceria com Secretaria Estadual'
@@ -286,6 +324,7 @@ export class Registro00 {
   termoColaboracao: string;
 
   // Campo 37: Termo de fomento
+  @NomeCampo('037 - Termo de fomento')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaEstadual === '1',
     'Campo obrigatório quando parceria com Secretaria Estadual'
@@ -295,6 +334,7 @@ export class Registro00 {
   termoFomento: string;
 
   // Campo 38: Acordo de cooperação
+  @NomeCampo('038 - Acordo de cooperação')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaEstadual === '1',
     'Campo obrigatório quando parceria com Secretaria Estadual'
@@ -304,6 +344,7 @@ export class Registro00 {
   acordoCooperacao: string;
 
   // Campo 39: Contrato de prestação de serviço
+  @NomeCampo('039 - Contrato de prestação de serviço')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaEstadual === '1',
     'Campo obrigatório quando parceria com Secretaria Estadual'
@@ -313,6 +354,7 @@ export class Registro00 {
   contratoPrestacaoServico: string;
 
   // Campo 40: Termo de cooperação técnica e financeira
+  @NomeCampo('040 - Termo de cooperação técnica e financeira')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaEstadual === '1',
     'Campo obrigatório quando parceria com Secretaria Estadual'
@@ -322,6 +364,7 @@ export class Registro00 {
   termoCooperacaoTecnicaFinanceira: string;
 
   // Campo 41: Contrato de consórcio público/Convênio de cooperação
+  @NomeCampo('041 - Contrato de consórcio público/Convênio de cooperação')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaEstadual === '1',
     'Campo obrigatório quando parceria com Secretaria Estadual'
@@ -331,6 +374,7 @@ export class Registro00 {
   contratoConsorcioPublico: string;
 
   // Campo 42: Termo de colaboração (Secretaria Municipal)
+  @NomeCampo('042 - Termo de colaboração (Secretaria Municipal)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaMunicipal === '1',
     'Campo obrigatório quando parceria com Secretaria Municipal'
@@ -340,6 +384,7 @@ export class Registro00 {
   termoColaboracaoMunicipal: string;
 
   // Campo 43: Termo de fomento (Secretaria Municipal)
+  @NomeCampo('043 - Termo de fomento (Secretaria Municipal)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaMunicipal === '1',
     'Campo obrigatório quando parceria com Secretaria Municipal'
@@ -349,6 +394,7 @@ export class Registro00 {
   termoFomentoMunicipal: string;
 
   // Campo 44: Acordo de cooperação (Secretaria Municipal)
+  @NomeCampo('044 - Acordo de cooperação (Secretaria Municipal)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaMunicipal === '1',
     'Campo obrigatório quando parceria com Secretaria Municipal'
@@ -358,6 +404,7 @@ export class Registro00 {
   acordoCooperacaoMunicipal: string;
 
   // Campo 45: Contrato de prestação de serviço (Secretaria Municipal)
+  @NomeCampo('045 - Contrato de prestação de serviço (Secretaria Municipal)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaMunicipal === '1',
     'Campo obrigatório quando parceria com Secretaria Municipal'
@@ -367,6 +414,7 @@ export class Registro00 {
   contratoPrestacaoServicoMunicipal: string;
 
   // Campo 46: Termo de cooperação técnica e financeira (Secretaria Municipal)
+  @NomeCampo('046 - Termo de cooperação técnica e financeira (Secretaria Municipal)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaMunicipal === '1',
     'Campo obrigatório quando parceria com Secretaria Municipal'
@@ -376,6 +424,7 @@ export class Registro00 {
   termoCooperacaoTecnicaFinanceiraMunicipal: string;
 
   // Campo 47: Contrato de consórcio público/Convênio de cooperação (Secretaria Municipal)
+  @NomeCampo('047 - Contrato de consórcio público/Convênio de cooperação (Secretaria Municipal)')
   @ObrigatorioCondicional(
     (e: Registro00) => e.parceriaSecretariaMunicipal === '1',
     'Campo obrigatório quando parceria com Secretaria Municipal'
@@ -385,6 +434,7 @@ export class Registro00 {
   contratoConsorcioPublicoMunicipal: string;
 
   // Campo 48: CNPJ da mantenedora principal da escola privada
+  @NomeCampo('048 - CNPJ da mantenedora principal da escola privada')
   @ObrigatorioCondicional(
     (e: Registro00) =>
       e.mantenedoraSemFinsLucrativos === '1' &&
@@ -398,11 +448,13 @@ export class Registro00 {
   cnpjMantenedora: string;
 
   // Campo 49: Número do CNPJ da escola privada
+  @NomeCampo('049 - Número do CNPJ da escola privada')
   @TamanhoFixo(14, 'Deve ter 14 caracteres')
   // Adicione validação de números e CNPJ válido no método validar()
   cnpjEscolaPrivada: string;
 
   // Campo 50: Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educação
+  @NomeCampo('050 - Regulamentação/autorização no conselho ou órgão municipal, estadual ou federal de educação')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Campo obrigatório para escolas em atividade'
@@ -413,11 +465,13 @@ export class Registro00 {
 
 
    // Campo 51: Federal (esfera administrativa do conselho)
+  @NomeCampo('051 - Federal (esfera administrativa do conselho)') 
   @TamanhoFixo(1, 'Deve ter 1 caractere')
   @ValoresPermitidos(['0', '1'], 'Valor inválido (0-Não, 1-Sim)')
   federalConselho: string;
 
   // Campo 52: Estadual (esfera administrativa do conselho)
+  @NomeCampo('052 - Estadual (esfera administrativa do conselho)')
   @ObrigatorioCondicional(
     (e: Registro00) => ['1', '2'].includes(e.regulamentacaoConselho),
     'Campo obrigatório quando regulamentação/autorização for Sim ou Em tramitação'
@@ -427,6 +481,7 @@ export class Registro00 {
   estadualConselho: string;
 
   // Campo 53: Municipal (esfera administrativa do conselho)
+  @NomeCampo('053 - Municipal (esfera administrativa do conselho)')
   @ObrigatorioCondicional(
     (e: Registro00) => ['1', '2'].includes(e.regulamentacaoConselho),
     'Campo obrigatório quando regulamentação/autorização for Sim ou Em tramitação'
@@ -436,6 +491,7 @@ export class Registro00 {
   municipalConselho: string;
 
   // Campo 54: Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior
+  @NomeCampo('054 - Unidade vinculada à escola de educação básica ou unidade ofertante de educação superior')
   @ObrigatorioCondicional(
     (e: Registro00) => e.situacaoFuncionamento === '1',
     'Campo obrigatório para escolas em atividade'
@@ -445,6 +501,7 @@ export class Registro00 {
   unidadeVinculada: string;
 
   // Campo 55: Código da Escola Sede
+  @NomeCampo('055 - Código da Escola Sede')
   @ObrigatorioCondicional(
     (e: Registro00) => e.unidadeVinculada === '1',
     'Campo obrigatório quando unidade vinculada a escola de educação básica'
@@ -454,6 +511,7 @@ export class Registro00 {
   codigoEscolaSede: string;
 
   // Campo 56: Código da IES
+  @NomeCampo('056 - Código da IES')
   @ObrigatorioCondicional(
     (e: Registro00) => e.unidadeVinculada === '2',
     'Campo obrigatório quando unidade ofertante de ensino superior'
@@ -462,7 +520,6 @@ export class Registro00 {
   codigoIES: string;
 
   
-
   constructor(campos: string[]) {
     this.tipoRegistro = campos[0]?.trim() ?? '';
     this.codigoEscola = campos[1]?.trim() ?? '';
@@ -528,12 +585,12 @@ export class Registro00 {
 
   for (const propriedade of propriedades) {
     const rules = Reflect.getMetadata(VALIDATION_METADATA_KEY, this, propriedade as string) || [];
-    
+    const nomeCampo = Reflect.getMetadata(NOME_CAMPO_METADATA_KEY, this, propriedade as string) || String(propriedade);
     for (const rule of rules) {
       const erro = rule.validate(this[propriedade], this);
       if (erro) {
         erros.push({
-          campo: String(propriedade),
+          campo: nomeCampo,
           regra: rule?.mensagemPadrao || 'Regra de validação',
           mensagem: erro,
         });

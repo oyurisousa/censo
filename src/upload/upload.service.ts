@@ -4,6 +4,7 @@ import * as iconv from 'iconv-lite';
 import { Registro00 } from '../registros/registro-00.model';
 import * as PDFDocument from 'pdfkit';
 import { PassThrough } from 'stream';
+import { Registro10 } from 'src/registros/registro-10.model';
 
 @Injectable()
 export class UploadService {
@@ -36,6 +37,30 @@ export class UploadService {
           continue;
         }
         const registro = new Registro00(campos);
+        const erros = registro.validar();
+        for (const erro of erros) {
+          errosPorTipo[tipo] = errosPorTipo[tipo] || [];
+          errosPorTipo[tipo].push({
+            linha: i + 1,
+            campo: erro.campo,
+            regra: erro.regra,
+            mensagem: erro.mensagem,
+          });
+        }
+      }
+      if (tipo === '10') {
+        const esperado = 79;
+        if (campos.length !== esperado) {
+          errosPorTipo[tipo] = errosPorTipo[tipo] || [];
+          errosPorTipo[tipo].push({
+            linha: i + 1,
+            campo: 'Todos',
+            regra: `Quantidade de campos deve ser ${esperado}`,
+            mensagem: `Foram encontrados ${campos.length} campos.`,
+          });
+          continue;
+        }
+        const registro = new Registro10(campos);
         const erros = registro.validar();
         for (const erro of erros) {
           errosPorTipo[tipo] = errosPorTipo[tipo] || [];
