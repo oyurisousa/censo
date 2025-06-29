@@ -49,7 +49,7 @@ export class UploadService {
         }
       }
       if (tipo === '10') {
-        const esperado = 79;
+        const esperado = 187;
         if (campos.length !== esperado) {
           errosPorTipo[tipo] = errosPorTipo[tipo] || [];
           errosPorTipo[tipo].push({
